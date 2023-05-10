@@ -9,7 +9,7 @@ Exemplos de integração com o WebTEF(POS Web) do Marcado Pago
 ## Sobre o projeto 
   Este repositório possui exemplos de integração com o WebTEF(POS Web) do Marcado Pago. O WebTEF ou POS Web consistem em uma API restFull que recebe as requisições de pagamentos e são puxadas e processadas pelos terminais Ponit Pro2 e Point Smart.
 
-![Modelo WebTEF Mercado Pago](https://github.com/sacfiscal/WebTEFMercadoPago/img/webtef.png)  
+![Modelo WebTEF Mercado Pago](https://github.com/sacfiscal/WebTEFMercadoPago/blob/main/img/webtef.png)  
 
 Documentação e referência da API de pagamentos do Marcado: <https://www.mercadopago.com.br/developers/pt/reference>
 
