@@ -1,4 +1,4 @@
-![WebTEF Mercado Pago Demos](https://github.com/sacfiscal/WebTEFMercadoPago/img/logo.png)
+![WebTEF Mercado Pago Demos](https://github.com/sacfiscal/WebTEFMercadoPago/blob/main/img/logo.png)
 # WebTEF Mercado Pago
 Exemplos de integração com o WebTEF(POS Web) do Marcado Pago
 
