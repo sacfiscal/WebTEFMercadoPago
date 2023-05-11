@@ -155,20 +155,37 @@ begin
   Result := EmptyStr;
   try
     LJson := TJSONObject.Create;
-    LJson.AddPair('amount', AAmount);//Trunc(AAmount*100));
+
+    {$IFDEF VER350}
+      LJson.AddPair('amount', AAmount);//Trunc(AAmount*100));
+    {$ELSE}
+      LJson.AddPair('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
+    {$ENDIF}
+
     LJson.AddPair('description', ADescription);
     LPayment := TJSONObject.Create;
 
     if(AType = 'credit_card') then
     begin
-      LPayment.AddPair('installments', AInstallments);
-      LPayment.AddPair('installments_cost', AInstallmentsCost);
+      {$IFDEF VER350}
+        LPayment.AddPair('installments', AInstallments);
+        LPayment.AddPair('installments_cost', AInstallmentsCost);
+      {$ELSE}
+        LPayment.AddPair('installments', TJSONNumber.Create(AInstallments));
+        LPayment.AddPair('installments_cost', TJSONNumber.Create(AInstallmentsCost));
+      {$ENDIF}
+
     end;
     LPayment.AddPair('type', AType);
     LJson.AddPair('payment', LPayment);
     LAdditionalInfo := TJSONObject.Create;
     LAdditionalInfo.AddPair('external_reference', AExternalReference);
-    LAdditionalInfo.AddPair('print_on_terminal', APrintOnTerminal);
+    {$IFDEF VER350}
+        LAdditionalInfo.AddPair('print_on_terminal', APrintOnTerminal);
+    {$ELSE}
+        LAdditionalInfo.AddPair('print_on_terminal', TJSONBool.Create(APrintOnTerminal));
+    {$ENDIF}
+
     LJson.AddPair('additional_info', LAdditionalInfo);
 
     try
@@ -291,7 +308,11 @@ begin
     LJson := TJSONObject.Create;
 
     if(AAmount > 0) then
-      LJson.AddPair('amount', AAmount); //Trunc(AAmount*100));
+    {$IFDEF VER350}
+        LJson.AddPair('amount', AAmount);
+    {$ELSE}
+        LJson.AddPair('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
+    {$ENDIF}
 
     try
       LResponse := TRequest
