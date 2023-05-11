@@ -1,0 +1,649 @@
+{
+	"info": {
+		"_postman_id": "855903a9-757b-4aba-bb02-e7c12fc16f9b",
+		"name": "MercadoPago WebTEF SWHouses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6534006"
+	},
+	"item": [
+		{
+			"name": "OAuth",
+			"item": [
+				{
+					"name": "1 - Gerar Access Token e Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}",
+									"description": "credenciais de produção",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "id app",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "{{code}}",
+									"description": "codigo TG",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "url integrador",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/oauth/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.1 - Atualizar Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_secret",
+									"value": "",
+									"description": "credenciais de produção",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "",
+									"description": "id app",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "",
+									"description": "codigo TG",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/oauth/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dispositivos",
+			"item": [
+				{
+					"name": "2 - Listar Dispositivos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/devices",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"devices"
+							],
+							"query": [
+								{
+									"key": "store_id",
+									"value": "1235456678",
+									"disabled": true
+								},
+								{
+									"key": "pos_id",
+									"value": "1235456678",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3 - Alterar Modo de Operação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"operating_mode\": \"PDV\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/devices/{{id_terminal}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"devices",
+								"{{id_terminal}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagamentos Point",
+			"item": [
+				{
+					"name": "4 - Criar Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-test-scope",
+								"value": "sandbox",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 100,\r\n  \"description\": \"Pedido 0001 - Crédito\",\r\n  \"payment\": {\r\n    \"installments\": 1,\r\n    \"type\": \"credit_card\",\r\n    \"installments_cost\": \"seller\"\r\n  },\r\n  \"additional_info\": {\r\n    \"external_reference\": \"Pedido 001\",\r\n    \"print_on_terminal\": false\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/devices/{{id_terminal}}/payment-intents",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"devices",
+								"{{id_terminal}}",
+								"payment-intents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 - Cancelar Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/devices/{{id_terminal}}}/payment-intents/{{guid_pagto}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"devices",
+								"{{id_terminal}}}",
+								"payment-intents",
+								"{{guid_pagto}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6 - Buscar Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/payment-intents/{{guid_pagto}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"payment-intents",
+								"{{guid_pagto}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.1 - Buscar Pagamento Detalhado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/v1/payments/{{id_pagto}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"{{id_pagto}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Extornos",
+			"item": [
+				{
+					"name": "7 - Criar Estorno",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/v1/payments/{{id_pagto}}/refunds",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"{{id_pagto}}",
+								"refunds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 - Buscar Estorno",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/v1/payments/{{id_pagto}}/refunds/{{idEstorno}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"{{id_pagto}}",
+								"refunds",
+								"{{idEstorno}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Conciliação",
+			"item": [
+				{
+					"name": "9 - Lista de Pagamentos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/payment-intents/events?startDate=1948-01-16&endDate=2022-01-25",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"payment-intents",
+								"events"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "1948-01-16"
+								},
+								{
+									"key": "endDate",
+									"value": "2022-01-25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10 - Obter último status do Pagamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/point/integration-api/payment-intents/{{guid_pagto}}/events",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"point",
+								"integration-api",
+								"payment-intents",
+								"{{guid_pagto}}",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11 - Lista de Transações",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.mercadopago.com/v1/payments/search?sort=date_created&criteria=desc&range=date_created&begin_date=NOW-30DAYS&end_date=NOW",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"search"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "date_created"
+								},
+								{
+									"key": "criteria",
+									"value": "desc"
+								},
+								{
+									"key": "range",
+									"value": "date_created"
+								},
+								{
+									"key": "begin_date",
+									"value": "NOW-30DAYS"
+								},
+								{
+									"key": "end_date",
+									"value": "NOW"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "client_secret",
+			"value": ""
+		},
+		{
+			"key": "client_id",
+			"value": ""
+		},
+		{
+			"key": "code",
+			"value": ""
+		},
+		{
+			"key": "redirect_uri",
+			"value": ""
+		},
+		{
+			"key": "access_token",
+			"value": "APP_USR-4688644979731832-041412-45df35b451a1cae386b4dc974b664551-323709768"
+		},
+		{
+			"key": "id_terminal",
+			"value": "GERTEC_MP35P__8701442341443345"
+		},
+		{
+			"key": "refresh_token",
+			"value": "TG-644f0d66d88dfb000101d9fa-323709768",
+			"type": "string"
+		},
+		{
+			"key": "guid_pagto",
+			"value": "b15e78a3-78de-4dfe-988b-7412d7151fbc"
+		},
+		{
+			"key": "id_pagto",
+			"value": "57031040004"
+		},
+		{
+			"key": "idPgtoAEstornar",
+			"value": "57889933796"
+		},
+		{
+			"key": "idEstorno",
+			"value": "1362755842"
+		}
+	]
+}
