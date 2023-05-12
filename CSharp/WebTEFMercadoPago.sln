@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoConsole", "DemoConsole\DemoConsole.csproj", "{A3C2971E-8C1D-4595-8D93-2B3DC783BE7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTEFMercadoPago", "WebTEFMercadoPago\WebTEFMercadoPago.csproj", "{9E0A3AD2-F275-4054-B4C7-93427C98A51B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3C2971E-8C1D-4595-8D93-2B3DC783BE7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C2971E-8C1D-4595-8D93-2B3DC783BE7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C2971E-8C1D-4595-8D93-2B3DC783BE7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C2971E-8C1D-4595-8D93-2B3DC783BE7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E0A3AD2-F275-4054-B4C7-93427C98A51B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E0A3AD2-F275-4054-B4C7-93427C98A51B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E0A3AD2-F275-4054-B4C7-93427C98A51B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E0A3AD2-F275-4054-B4C7-93427C98A51B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1916275D-62DE-4BAB-9029-06C7280724BE}
+	EndGlobalSection
+EndGlobal

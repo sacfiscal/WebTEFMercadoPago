@@ -5,3 +5,15 @@
 *.res
 *.exe
 /*.bak
+*.cache
+*.CopyComplete
+*.dll
+*.editorconfig
+*.json
+*.pdb
+*.props
+*.targets
+*.txt
+.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
+DemoConsole.AssemblyInfo.cs
+DemoConsole.GlobalUsings.g.cs
