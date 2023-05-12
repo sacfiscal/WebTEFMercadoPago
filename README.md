@@ -1,5 +1,5 @@
 ![WebTEF Mercado Pago Demos](https://github.com/sacfiscal/WebTEFMercadoPago/blob/main/img/logo.png)
-# WebTEF Mercado Pago
+# WebTEF(POS Web) Mercado Pago
 Exemplos de integração com o WebTEF(POS Web) do Marcado Pago
 
 ![Badge](https://img.shields.io/static/v1?label=delphi&message=language&color=blue&style=for-the-badge&logo=delphi)
@@ -9,7 +9,7 @@ Exemplos de integração com o WebTEF(POS Web) do Marcado Pago
 ## Sobre o projeto 
   Este repositório possui exemplos de integração com o WebTEF(POS Web) do Marcado Pago. O WebTEF ou POS Web consistem em uma API restFull que recebe as requisições de pagamentos e são puxadas e processadas pelos terminais Ponit Pro2 e Point Smart.
 
-## Site do projeto WebTEF com modelo técnico e de negócio para software house 
+## Site do projeto WebTEF(POS Web) com modelo técnico e de negócio para software house 
   Neste site você tem o resumo do modelo técnico de funcionamento asism como o modleo de negócio para a software house. Ao deixar os dados no site, receberá um e-mail com mais detalhes dos modelos, assim como instruções de como entrar na comunidade das software houses que utilizam o webtef(pos web) em seu software.
   - Site (<https://www.webtef.com.br>)
   
