@@ -25,5 +25,11 @@ Documentação e referência da API de pagamentos do Marcado: <https://www.merca
 ## Exemplo em C#
 - RestSharp
 
+## Documentação Oficial da API de pagamentos Mercado Pago
+- Introdução <https://www.mercadopago.com.br/developers/pt/reference>
+- Dispositivos <https://www.mercadopago.com.br/developers/pt/reference/integrations_api/_point_integration-api_devices/get>
+- Pagamentos Point <https://www.mercadopago.com.br/developers/pt/reference/integrations_api_paymentintent_mlb/_point_integration-api_devices_deviceid_payment-intents/post>
+
+
 ## License
 MIT
