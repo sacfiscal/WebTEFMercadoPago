@@ -10,7 +10,6 @@ uses
   Vcl.Imaging.jpeg, Vcl.Imaging.pngimage;
 
 type
-
   TForm1 = class(TForm)
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -131,16 +130,13 @@ type
     procedure btObterEstornoClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btListarTransacoesClick(Sender: TObject);
-
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
 var
   Form1: TForm1;
-
 
 implementation
 
@@ -151,30 +147,35 @@ uses
 
 function IsJson(const AValue: string): Boolean;
 begin
-  try
-    TJSONObject.ParseJSONValue(AValue);
-    Result := True;
-  except
-    Result := False;
-  end;
+    try
+      TJSONObject.ParseJSONValue(AValue);
+      Result := True;
+    except
+      Result := False;
+    end;
 end;
 
 procedure TForm1.btnModoOperacaoClick(Sender: TObject);
 var
-modoOperacao, AccessToken, RefreshToken: string;
-JSONResponse: TJSONObject;
-ResponseContent: string;
+  modoOperacao, AccessToken, RefreshToken: string;
+  JSONResponse: TJSONObject;
+  ResponseContent: string;
 begin
-  if (rbPDV.Checked) then
-    modoOperacao := 'PDV'
-  else
-    modoOperacao := 'STANDALONE';
+    Memo2.Lines.Clear;
+    try
+        if (rbPDV.Checked) then
+           modoOperacao := 'PDV'
+        else
+           modoOperacao := 'STANDALONE';
 
-  ResponseContent := ChangeOperatingMode(edtAccessToken.Text, edtDevice.Text, modoOperacao);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        ResponseContent := ChangeOperatingMode(edtAccessToken.Text, edtDevice.Text, modoOperacao);
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
 
-  Memo2.Lines.Clear;
-  Memo2.Lines.Add(JSONResponse.Format(2));
+        Memo2.Lines.Add(JSONResponse.Format(2));
+    except
+        on e:Exception do
+           Memo2.Lines.Add(e.Message);
+    end;
 
 end;
 
@@ -182,19 +183,20 @@ procedure TForm1.btnRefreshTokenClick(Sender: TObject);
 var
   JSONResponse: TJSONObject;
   ResponseContent: string;
-  AccessToken, RefreshToken : string;
 begin
-  ResponseContent := CreateRefreshToken(edtClientSecret.Text, edtClientId.Text, edtRefreshToken.Text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
-  AccessToken := JSONResponse.GetValue('access_token').Value;
-  RefreshToken := JSONResponse.GetValue('refresh_token').Value;
+    Memo1.Lines.Clear;
+    try
+        ResponseContent := CreateRefreshToken(edtClientSecret.Text, edtClientId.Text, edtRefreshToken.Text);
 
-  edtAccessToken.Text := AccessToken;
-  edtRefreshToken.Text := RefreshToken;
+        JSONResponse         := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtAccessToken.Text  := JSONResponse.GetValue('access_token').Value;
+        edtRefreshToken.Text := JSONResponse.GetValue('refresh_token').Value;
 
-  Memo1.Lines.Clear;
-  Memo1.Lines.Add(JSONResponse.Format(2));
-
+        Memo1.Lines.Add(JSONResponse.Format(2));
+    except
+        on e:Exception do
+           Memo1.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btObterEstornoClick(Sender: TObject);
@@ -202,16 +204,18 @@ var
  JSONResponse: TJSONObject;
  ResponseContent: string;
 begin
-  ResponseContent := GetRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, edtIdEstorno.Text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+    Memo4.Lines.Clear;
+    try
+        ResponseContent := GetRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, edtIdEstorno.Text);
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtIdPagtoEstornado.Text := JSONResponse.GetValue('payment_id').Value;
+        edtValorEstornado.Text := JSONResponse.GetValue('amount').Value;
 
-  edtIdPagtoEstornado.Text := JSONResponse.GetValue('payment_id').Value;
-  edtValorEstornado.Text := JSONResponse.GetValue('amount').Value;
-
-  Memo4.Lines.Clear;
-  Memo4.Lines.Add(JSONResponse.Format(2));
-
-
+        Memo4.Lines.Add(JSONResponse.Format(2));
+    except
+        on e:Exception do
+           Memo4.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btStatusPagtoClick(Sender: TObject);
@@ -219,17 +223,22 @@ var
   JSONResponse, payment: TJSONObject;
   ResponseContent: string;
 begin
-  ResponseContent := GetPaymentIntents(edtAccessToken.Text, edtIntencaoPagto.text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+    Memo3.Lines.Clear;
+    try
+        ResponseContent := GetPaymentIntents(edtAccessToken.Text, edtIntencaoPagto.text);
 
-  payment := JSONResponse.GetValue('payment') as TJSONObject;
-  edtIdPagto.Text := payment.GetValue('id').Value;
-  edtIdPagtoEstorno.Text := payment.GetValue('id').Value;
-  edtStatusPagto.Text := JSONResponse.GetValue('state').Value;
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        payment                := JSONResponse.GetValue('payment') as TJSONObject;
 
-  Memo3.Lines.Clear;
-  Memo3.Lines.Add(JSONResponse.Format(2));
+        edtIdPagto.Text        := payment.GetValue('id').Value;
+        edtIdPagtoEstorno.Text := payment.GetValue('id').Value;
+        edtStatusPagto.Text    := JSONResponse.GetValue('state').Value;
 
+        Memo3.Lines.Add(JSONResponse.Format(2));
+    except
+        on e:Exception do
+           Memo3.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -237,14 +246,17 @@ var
   JSONResponse: TJSONObject;
   ResponseContent: string;
 begin
-  ResponseContent := CancelPayment(edtAccessToken.Text, edtDevice.Text, edtIntencaoPagto.Text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+    Memo4.Lines.Clear;
+    try
+        ResponseContent := CancelPayment(edtAccessToken.Text, edtDevice.Text, edtIntencaoPagto.Text);
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtIdCancelamento.Text := JSONResponse.GetValue('id').Value;
 
-  edtIdCancelamento.Text := JSONResponse.GetValue('id').Value;
-
-  Memo4.Lines.Clear;
-  Memo4.Lines.Add(JSONResponse.Format(2));
-
+        Memo4.Lines.Add(JSONResponse.Format(2));
+    except
+       on e:Exception do
+          Memo4.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btListarTransacoesClick(Sender: TObject);
@@ -252,11 +264,16 @@ var
   JSONResponse: TJSONObject;
   ResponseContent: string;
 begin
-  ResponseContent := GetPaymentsList(edtAccessToken.Text, 30);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+    Memo5.Lines.Clear;
+    try
+       ResponseContent := GetPaymentsList(edtAccessToken.Text, 30);
+       JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
 
-  Memo5.Lines.Clear;
-  Memo5.Lines.Add(JSONResponse.Format(2));
+       Memo5.Lines.Add(JSONResponse.Format(2));
+    except
+       on e:Exception do
+          Memo5.Lines.Add(e.Message);
+    end;
 
 end;
 
@@ -266,22 +283,24 @@ var
   JSONResponse: TJSONObject;
   ResponseContent: string;
 begin
+    Memo4.Lines.Clear;
+    try
+        if(edtValorEstorno.Text <> '') then
+           valor := StrToFloat(StringReplace(edtValorEstorno.Text, ',', '', [rfReplaceAll]))
+        else
+           valor := 0;
 
-  if(edtValorEstorno.Text <> '') then
-    valor := StrToFloat(StringReplace(edtValorEstorno.Text, ',', '', [rfReplaceAll]))
-  else
-    valor := 0;
+        ResponseContent := CreateRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, valor);
 
-  ResponseContent := CreateRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, valor);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        JSONResponse          := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtIdEstorno.Text     := JSONResponse.GetValue('id').Value;
+        edtStatusEstorno.Text := JSONResponse.GetValue('status').Value;
 
-  edtIdEstorno.Text := JSONResponse.GetValue('id').Value;
-  edtStatusEstorno.Text := JSONResponse.GetValue('status').Value;
-
-  Memo4.Lines.Clear;
-  Memo4.Lines.Add(JSONResponse.Format(2));
-
-
+        Memo4.Lines.Add(JSONResponse.Format(2));
+    except
+       on e:Exception do
+          Memo4.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btBuscarPagamentoClick(Sender: TObject);
@@ -289,98 +308,104 @@ var
   JSONResponse, fee_details, transaction_details: TJSONObject;
   ResponseContent: string;
 begin
-  ResponseContent := GetPayment(edtAccessToken.Text, edtIdPagto.text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+    Memo3.Lines.Clear;
+    try
+        ResponseContent := GetPayment(edtAccessToken.Text, edtIdPagto.text);
 
-  edtCodAutorizacao.Text := JSONResponse.GetValue('authorization_code').Value;
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtCodAutorizacao.Text := JSONResponse.GetValue('authorization_code').Value;
 
-  if (JSONResponse.TryGetValue<TJSONObject>('fee_details[0]', fee_details)) then
-    edtTaxa.Text := fee_details.GetValue('amount').Value;
+        if (JSONResponse.TryGetValue<TJSONObject>('fee_details[0]', fee_details)) then
+           edtTaxa.Text := fee_details.GetValue('amount').Value;
 
-  transaction_details := JSONResponse.GetValue('transaction_details') as TJSONObject;
-  edtValorRecebido.Text := transaction_details.GetValue('net_received_amount').Value;
+        transaction_details   := JSONResponse.GetValue('transaction_details') as TJSONObject;
+        edtValorRecebido.Text := transaction_details.GetValue('net_received_amount').Value;
+        edtBandeira.Text      := JSONResponse.GetValue('payment_method_id').Value;
 
-  edtBandeira.Text := JSONResponse.GetValue('payment_method_id').Value;
-
-  Memo3.Lines.Clear;
-  Memo3.Lines.Add(JSONResponse.Format(2));
-
+        Memo3.Lines.Add(JSONResponse.Format(2));
+    except
+       on e:Exception do
+          Memo3.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btLimparCamposClick(Sender: TObject);
 begin
-  edtClientId.Clear;
-  edtClientSecret.Clear;
-  edtRedirectUrl.Clear;
-  edtTGCode.Clear;
-  edtAccessToken.Clear;
-  edtRefreshToken.Clear;
-  Memo1.Lines.Clear;
+    edtClientId.Clear;
+    edtClientSecret.Clear;
+    edtRedirectUrl.Clear;
+    edtTGCode.Clear;
+    edtAccessToken.Clear;
+    edtRefreshToken.Clear;
+    Memo1.Lines.Clear;
 end;
 
 procedure TForm1.rbCreditoClick(Sender: TObject);
 begin
-lbParcelas.Visible := true;
-edtParcelas.Visible := true;
-lbCustoParcelas.Visible := true;
-cbCustoParcelas.Visible := true;
-cbCustoParcelas.ItemIndex := 0;
+  lbParcelas.Visible := true;
+  edtParcelas.Visible := true;
+  lbCustoParcelas.Visible := true;
+  cbCustoParcelas.Visible := true;
+  cbCustoParcelas.ItemIndex := 0;
 end;
 
 procedure TForm1.rbDebitoClick(Sender: TObject);
 begin
-lbParcelas.Visible := false;
-edtParcelas.Visible := false;
-lbCustoParcelas.Visible := false;
-cbCustoParcelas.Visible := false;
-cbCustoParcelas.ItemIndex := -1;
+    lbParcelas.Visible := false;
+    edtParcelas.Visible := false;
+    lbCustoParcelas.Visible := false;
+    cbCustoParcelas.Visible := false;
+    cbCustoParcelas.ItemIndex := -1;
 end;
-
-
 
 procedure TForm1.btCriarPagtoClick(Sender: TObject);
 var
-JSONResponse: TJSONObject;
-ResponseContent, TipoPagto, CustoParcela, idPagto: string;
-valor : double;
-parcelas: integer;
+  JSONResponse: TJSONObject;
+  ResponseContent, TipoPagto, CustoParcela, idPagto: string;
+  valor : double;
+  parcelas: integer;
 begin
-  valor := StrToFloat(StringReplace(edtValor.Text, ',', '', [rfReplaceAll]));
-  parcelas := StrToInt(edtParcelas.Text);
+    Memo3.Lines.Clear;
+    try
+        valor := StrToFloat(StringReplace(edtValor.Text, ',', '', [rfReplaceAll]));
+        parcelas := StrToInt(edtParcelas.Text);
 
-  if (rbDebito.Checked) then
-    TipoPagto := 'debit_card'
-  else
-  begin
-    TipoPagto := 'credit_card';
-    if (parcelas > 1) and
-     ((valor/parcelas) < 5) then
-     raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
-  end;
+        if (rbDebito.Checked) then
+           TipoPagto := 'debit_card'
+        else
+        begin
+            TipoPagto := 'credit_card';
+            if (parcelas > 1) and
+             ((valor/parcelas) < 5) then
+             raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
+        end;
 
-  if (cbCustoParcelas.ItemIndex = 0) then
-    CustoParcela := 'seller'
-  else if (cbCustoParcelas.ItemIndex = 1) then
-    CustoParcela := 'buyer'
-  else
-    CustoParcela := '';
+        if (cbCustoParcelas.ItemIndex = 0) then
+           CustoParcela := 'seller'
+        else if (cbCustoParcelas.ItemIndex = 1) then
+           CustoParcela := 'buyer'
+        else
+           CustoParcela := '';
 
-  ResponseContent := CreatePayment(edtAccessToken.Text,
-                                   edtDevice.text,
-                                   edtDescricao.Text,
-                                   valor,
-                                   parcelas,
-                                   TipoPagto,
-                                   CustoParcela,
-                                   edtReferencia.text,
-                                   chkImprimir.Checked);
+        ResponseContent := CreatePayment(edtAccessToken.Text,
+                                         edtDevice.text,
+                                         edtDescricao.Text,
+                                         valor,
+                                         parcelas,
+                                         TipoPagto,
+                                         CustoParcela,
+                                         edtReferencia.text,
+                                         chkImprimir.Checked);
 
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
-  idPagto := JSONResponse.GetValue('id').Value;
-  edtIntencaoPagto.Text := idPagto;
+        JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        idPagto := JSONResponse.GetValue('id').Value;
+        edtIntencaoPagto.Text := idPagto;
 
-  Memo3.Lines.Clear;
-  Memo3.Lines.Add(JSONResponse.Format(2));
+        Memo3.Lines.Add(JSONResponse.Format(2));
+    except
+       on e:Exception do
+          Memo3.Lines.Add(e.Message);
+    end;
 end;
 
 procedure TForm1.btListarDevicesClick(Sender: TObject);
@@ -389,34 +414,39 @@ var
   ResponseContent: string;
   AccessToken, RefreshToken : string;
 begin
-  ResponseContent := GetDevices(edtAccessToken.Text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+   Memo2.Lines.Clear;
+   try
+      ResponseContent := GetDevices(edtAccessToken.Text);
+      JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
 
-  if JSONResponse.TryGetValue<TJSONObject>('devices[0]', device) then
-    begin
-      edtDevice.Text :=device.GetValue('id').Value;
-    end;
-  Memo2.Lines.Clear;
-  Memo2.Lines.Add(JSONResponse.Format(2));
+      if JSONResponse.TryGetValue<TJSONObject>('devices[0]', device) then
+         edtDevice.Text := device.GetValue('id').Value;
 
+      Memo2.Lines.Add(JSONResponse.Format(2));
+   except
+       on e:Exception do
+           Memo2.Lines.Add(e.Message);
+   end;
 end;
 
 procedure TForm1.btnAccessTokenClick(Sender: TObject);
 var
   JSONResponse: TJSONObject;
   ResponseContent: string;
-  AccessToken, RefreshToken : string;
 begin
-  ResponseContent := CreateAccessToken(edtClientSecret.Text, edtClientId.Text, edtTGCode.Text, edtRedirectURL.Text);
-  JSONResponse := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
-  AccessToken := JSONResponse.GetValue('access_token').Value;
-  RefreshToken := JSONResponse.GetValue('refresh_token').Value;
+    Memo1.Lines.Clear;
+    try
+        ResponseContent := CreateAccessToken(edtClientSecret.Text, edtClientId.Text, edtTGCode.Text, edtRedirectURL.Text);
 
-  edtAccessToken.Text := AccessToken;
-  edtRefreshToken.Text := RefreshToken;
+        JSONResponse         := TJSONObject.ParseJSONValue(ResponseContent) as TJSONObject;
+        edtAccessToken.Text  := JSONResponse.GetValue('access_token').Value;
+        edtRefreshToken.Text := JSONResponse.GetValue('refresh_token').Value;
 
-  Memo1.Lines.Clear;
-  Memo1.Lines.Add(JSONResponse.Format(2));
+        Memo1.Lines.Add(JSONResponse.Format(2));
+    except
+        on e:Exception do
+           Memo1.Lines.Add(e.Message);
+    end;
 end;
 
 end.

@@ -1,41 +1,60 @@
 unit uWebTEFMercadoPago;
 
 interface
+
 uses
   REST.Types,
-  Windows, SysUtils, Classes, Forms, System.JSON, System.DateUtils;
-
-
-function CreateAccessToken(const AClientSecret, AClientId, ACode, ARedirectUri: String): String;
-function CreateRefreshToken(const AClientSecret, AClientId, ARefreshToken: String): String;
-function ChangeOperatingMode(const AToken, ADevice, ANewMode: String): String;
-function CreatePayment(const AToken, ADevice, ADescription: String;
-  const AAmount: Double; const AInstallments: Integer; const AType: String;
-  const AInstallmentsCost: String; const AExternalReference: String;
-  const APrintOnTerminal: Boolean): String;
-function CreateRefund(const AToken, AIdPayment: String; const AAmount: Double): String;
-function CancelPayment(const AToken, ADevice, APaymentIntentId: String): String;
-function GetDevices(const AToken: String): String;
-function GetPaymentIntents(const AToken, APaymentIntentId: String): String;
-function GetPaymentIntentsLastStatus(const AToken, APaymentIntentId: String): String;
-function GetPayment(const AToken, AIdPayment: String): String;
-function GetPaymentIntentsEvents(const AToken: String; const AStartDate, AEndDate: TDate): String;
-function GetPaymentsList(const AToken: String; const ADays: Integer): String;
-function GetRefund(const AToken, AIdPayment: String; AIdRefund: String): String;
-
-implementation
-uses
+  Windows,
+  SysUtils,
+  Classes,
+  Forms,
+  System.JSON,
+  System.DateUtils,
   RESTRequest4D;
 
-function CreateAccessToken(const AClientSecret, AClientId,
-  ACode, ARedirectUri: String): String;
+    function CreateAccessToken(const AClientSecret, AClientId, ACode, ARedirectUri: String): String;
+    function CreateRefreshToken(const AClientSecret, AClientId, ARefreshToken: String): String;
+    function ChangeOperatingMode(const AToken, ADevice, ANewMode: String): String;
+    function CreatePayment(const AToken, ADevice, ADescription: String;
+      const AAmount: Double; const AInstallments: Integer; const AType: String;
+      const AInstallmentsCost: String; const AExternalReference: String;
+      const APrintOnTerminal: Boolean): String;
+    function CreateRefund(const AToken, AIdPayment: String; const AAmount: Double): String;
+    function CancelPayment(const AToken, ADevice, APaymentIntentId: String): String;
+    function GetDevices(const AToken: String): String;
+    function GetPaymentIntents(const AToken, APaymentIntentId: String): String;
+    function GetPaymentIntentsLastStatus(const AToken, APaymentIntentId: String): String;
+    function GetPayment(const AToken, AIdPayment: String): String;
+    function GetPaymentIntentsEvents(const AToken: String; const AStartDate, AEndDate: TDate): String;
+    function GetPaymentsList(const AToken: String; const ADays: Integer): String;
+    function GetRefund(const AToken, AIdPayment: String; AIdRefund: String): String;
+
+const
+   _BASE_URL                   : string = 'https://api.mercadopago.com';
+
+   _TOKEN                      : string = '/oauth/token';
+   _DEVICE_GET                 : string = '/point/integration-api/devices';
+   _DEVICE_MODIFY              : string = '/point/integration-api/devices/{device_id}';
+   _PAYMENT_CREATE             : string = '/point/integration-api/devices/{device_id}/payment-intents';
+   _PAYMENT_CANCEL             : string = '/point/integration-api/devices/{device_id}/payment-intents/{payment_id}';
+   _PAYMENT_GET_INTENTS        : string = '/point/integration-api/payment-intents/{payment_id}';
+   _PAYMENT_LAST_STATUS        : string = '/point/integration-api/payment-intents/{payment_id}/events';
+   _PAYMENT_GET_INTENTS_EVENTS : string = '/point/integration-api/payment-intents/events?startDate={dti}&endDate={dtf}';
+   _PAYMENT_GET_LIST           : string = '/v1/payments/search?sort=date_created&criteria=desc&range=date_created&begin_date=NOW-{dias}DAYS&end_date=NOW';
+   _PAYMENT_GET                : string = '/v1/payments/{payment_id}';
+   _REFOUND_CREATE             : string = '/v1/payments/{payment_id}/refunds';
+   _REFOUND_GET                : string = '/v1/payments/{payment_id}/refunds/{reembolso_id}';
+
+implementation
+
+function CreateAccessToken(const AClientSecret, AClientId, ACode, ARedirectUri: String): String;
 var
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-  try
-    LResponse := TRequest
-                        .New.BaseURL('https://api.mercadopago.com/oauth/token')
+    Result := EmptyStr;
+    try
+       LResponse := TRequest
+                        .New.BaseURL( _BASE_URL + _TOKEN )
                         .AddHeader('Content-Type', 'application/x-www-form-urlencoded')
                         .AddParam('grant_type','authorization_code', TRESTRequestParameterKind.pkGETorPOST)
                         .AddParam('client_secret', AClientSecret, TRESTRequestParameterKind.pkGETorPOST )
@@ -44,12 +63,14 @@ begin
                         .AddParam('redirect_uri', ARedirectUri, TRESTRequestParameterKind.pkGETorPOST)
                         .Post;
 
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-    Result := LResponse.Content;
+       if LResponse.StatusCode <> 200 then
+          raise Exception.Create('[ERRO AO GERAR TOKEN]');
 
-  end;
+       Result := LResponse.Content;
+    except
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
 
 function CreateRefreshToken(const AClientSecret, AClientId, ARefreshToken: String): String;
@@ -57,87 +78,73 @@ var
   LRequest: IRequest;
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-  try
+    Result := EmptyStr;
     try
-      LResponse := TRequest
-                        .New.BaseURL('https://api.mercadopago.com/oauth/token')
-                        .AddHeader('Content-Type', 'application/x-www-form-urlencoded')
-                        .AddParam('grant_type','refresh_token', TRESTRequestParameterKind.pkGETorPOST)
-                        .AddParam('client_secret', AClientSecret, TRESTRequestParameterKind.pkGETorPOST )
-                        .AddParam('client_id', AClientId, TRESTRequestParameterKind.pkGETorPOST)
-                        .AddParam('refresh_token', ARefreshToken, TRESTRequestParameterKind.pkGETorPOST)
-                        .Post;
+        LResponse := TRequest
+                          .New.BaseURL( _BASE_URL + _TOKEN )
+                          .AddHeader('Content-Type', 'application/x-www-form-urlencoded')
+                          .AddParam('grant_type','refresh_token', TRESTRequestParameterKind.pkGETorPOST)
+                          .AddParam('client_secret', AClientSecret, TRESTRequestParameterKind.pkGETorPOST )
+                          .AddParam('client_id', AClientId, TRESTRequestParameterKind.pkGETorPOST)
+                          .AddParam('refresh_token', ARefreshToken, TRESTRequestParameterKind.pkGETorPOST)
+                          .Post;
+
+        if LResponse.StatusCode <> 200 then
+          raise Exception.Create('[ERRO AO ATUALIZAR TOKEN]');
+
+        Result := LResponse.Content;
     except
-      on e:exception do
-      begin
-        raise Exception.Create(e.Message);
-      end
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
     end;
-
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-
-    Result := LResponse.Content;
-  end;
 end;
 
 function GetDevices(const AToken: String): String;
 var
   LResponse: IResponse;
 begin
-  try
+    Result := EmptyStr;
     try
-      LResponse := TRequest
-                       .New.BaseURL('https://api.mercadopago.com/point/integration-api/devices')
-                       .Accept('application/json')
-                       .TokenBearer(AToken)
-                       .Get;
+        LResponse := TRequest
+                         .New.BaseURL( _BASE_URL + _DEVICE_GET )
+                         .Accept('application/json')
+                         .TokenBearer(AToken)
+                         .Get;
+
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO LER DEVICES]');
+
+        Result := LResponse.Content;
     except
-      on e:exception do
-      begin
-        raise Exception.Create(e.Message);
-      end
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
     end;
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-
-    Result := LResponse.Content;
-  end;
-
-
 end;
-
 function ChangeOperatingMode(const AToken, ADevice, ANewMode: String): String;
 var
   LResponse: IResponse;
   LJson: TJSONObject;
 begin
-  try
+    Result := EmptyStr;
+    LJson  := TJSONObject.Create;
+
     try
-      LJson := TJSONObject.Create;
-      LJson.AddPair('operating_mode', ANewMode);
-      LResponse := TRequest
-                           .New.BaseURL('https://api.mercadopago.com/point/integration-api/devices/'+ADevice)
-                           .Accept('application/json')
-                           .TokenBearer(AToken)
-                           .AddBody(LJson)
-                           .Patch;
+        LJson.AddPair('operating_mode', ANewMode);
+        LResponse := TRequest
+                             .New.BaseURL( _BASE_URL + _DEVICE_MODIFY.Replace('{device_id}', ADevice) )
+                             .Accept('application/json')
+                             .TokenBearer(AToken)
+                             .AddBody(LJson)
+                             .Patch;
+
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO MODIFICAR OPERATION MODE]');
+
+        Result := LResponse.Content;
     except
-      on e:exception do
-      begin
-        raise Exception.Create(e.Message);
-      end
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
     end;
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
-
-  Result := LResponse.Content;
-
 end;
 
 function CreatePayment(const AToken, ADevice, ADescription: String;
@@ -148,154 +155,162 @@ var
   LResponse: IResponse;
   LJson, LPayment, LAdditionalInfo: TJSONObject;
 begin
-  if (AInstallments > 1) and
-     ((AAmount/AInstallments) < 5) then
-     raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
-
-  Result := EmptyStr;
-  try
-    LJson := TJSONObject.Create;
-
-    {$IFDEF VER350}
-      LJson.AddPair('amount', AAmount);//Trunc(AAmount*100));
-    {$ELSE}
-      LJson.AddPair('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
-    {$ENDIF}
-
-    LJson.AddPair('description', ADescription);
-    LPayment := TJSONObject.Create;
-
-    if(AType = 'credit_card') then
-    begin
-      {$IFDEF VER350}
-        LPayment.AddPair('installments', AInstallments);
-        LPayment.AddPair('installments_cost', AInstallmentsCost);
-      {$ELSE}
-        LPayment.AddPair('installments', TJSONNumber.Create(AInstallments));
-        LPayment.AddPair('installments_cost', TJSONNumber.Create(AInstallmentsCost));
-      {$ENDIF}
-
-    end;
-    LPayment.AddPair('type', AType);
-    LJson.AddPair('payment', LPayment);
+    Result          := EmptyStr;
+    LJson           := TJSONObject.Create;
+    LPayment        := TJSONObject.Create;
     LAdditionalInfo := TJSONObject.Create;
-    LAdditionalInfo.AddPair('external_reference', AExternalReference);
-    {$IFDEF VER350}
-        LAdditionalInfo.AddPair('print_on_terminal', APrintOnTerminal);
-    {$ELSE}
-        LAdditionalInfo.AddPair('print_on_terminal', TJSONBool.Create(APrintOnTerminal));
-    {$ENDIF}
-
-    LJson.AddPair('additional_info', LAdditionalInfo);
 
     try
-      LResponse := TRequest
-                           .New.BaseURL(Format('https://api.mercadopago.com/point/integration-api/devices/%s/payment-intents',[ADevice]))
-                           .TokenBearer(AToken)
-                           .ContentType('application/json')
-                           .AddBody(LJson)
-                           .Post;
-    except
-      on e:exception do
-      begin
-        raise Exception.Create(e.Message);
-      end
-    end;
-  finally
-    if (LResponse.StatusCode <> 201) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
-  Result := LResponse.Content;
+         if (AInstallments > 1) and
+            ((AAmount/AInstallments) < 5) then
+            raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
 
+        {$IFDEF VER350}
+          LJson.AddPair('amount', AAmount);//Trunc(AAmount*100));
+        {$ELSE}
+          LJson.AddPair('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
+        {$ENDIF}
+
+        LJson.AddPair('description', ADescription);
+        if(AType = 'credit_card') then
+        begin
+          {$IFDEF VER350}
+            LPayment.AddPair('installments', AInstallments);
+            LPayment.AddPair('installments_cost', AInstallmentsCost);
+          {$ELSE}
+            LPayment.AddPair('installments', TJSONNumber.Create(AInstallments));
+            LPayment.AddPair('installments_cost', TJSONNumber.Create(AInstallmentsCost));
+          {$ENDIF}
+        end;
+
+        LPayment.AddPair('type', AType);
+        LJson.AddPair('payment', LPayment);
+        LAdditionalInfo.AddPair('external_reference', AExternalReference);
+
+        {$IFDEF VER350}
+            LAdditionalInfo.AddPair('print_on_terminal', APrintOnTerminal);
+        {$ELSE}
+            LAdditionalInfo.AddPair('print_on_terminal', TJSONBool.Create(APrintOnTerminal));
+        {$ENDIF}
+        LJson.AddPair('additional_info', LAdditionalInfo);
+
+        LResponse := TRequest
+                         .New.BaseURL( _BASE_URL + _PAYMENT_CREATE.Replace('{device_id}', ADevice) )
+                         .TokenBearer(AToken)
+                         .ContentType('application/json')
+                         .AddBody(LJson)
+                         .Post;
+
+        if LResponse.StatusCode <> 201 then
+           raise Exception.Create('[ERRO AO CRIAR PAYMENT]');
+
+        Result := LResponse.Content;
+    except
+       on E:Exception do
+       begin
+           if LResponse = nil then
+              raise Exception.Create(e.Message)
+           else
+              raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+       end;
+    end;
 end;
 
 function CancelPayment(const AToken, ADevice, APaymentIntentId: String): String;
 var
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-
-  try
+    Result := EmptyStr;
     try
-      LResponse := TRequest
-                       .New.BaseURL(Format('https://api.mercadopago.com/point/integration-api/devices/%s/payment-intents/%s',[ADevice, APaymentIntentId]))
-                       .Accept('application/json')
-                       .TokenBearer(AToken)
-                       .Delete;
-     except
-      on e:exception do
-      begin
-        raise Exception.Create(e.Message);
-      end
-    end;
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
-  Result := LResponse.Content;
+        LResponse := TRequest
+                         .New.BaseURL( _BASE_URL + _PAYMENT_CANCEL.Replace('{device_id}', ADevice)
+                                                                  .Replace('{payment_id}', APaymentIntentId) )
+                         .Accept('application/json')
+                         .TokenBearer(AToken)
+                         .Delete;
 
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CANCELAR PAYMENT]');
+
+         Result := LResponse.Content;
+    except
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
 
 function GetPaymentIntents(const AToken, APaymentIntentId: String): String;
 var
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-  try
+    Result := EmptyStr;
     try
-      LResponse := TRequest
-                         .New.BaseURL(Format('https://api.mercadopago.com/point/integration-api/payment-intents/%s',[APaymentIntentId]))
-                         .Accept('application/json')
-                         .TokenBearer(AToken)
-                         .Get;
-    except
-        on e:exception do
-        begin
-          raise Exception.Create(e.Message);
-        end
-    end;
-  finally
-  if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
+        LResponse := TRequest
+                           .New.BaseURL( _BASE_URL + _PAYMENT_GET_INTENTS.Replace('{payment_id}', APaymentIntentId) )
+                           .Accept('application/json')
+                           .TokenBearer(AToken)
+                           .Get;
 
-  Result := LResponse.Content;
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR PAYMENT INTENTS]');
+
+        Result := LResponse.Content;
+    except
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
 
 function GetPaymentIntentsLastStatus(const AToken, APaymentIntentId: String): String;
 var
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-  LResponse := TRequest
-                       .New.BaseURL(Format('https://api.mercadopago.com/point/integration-api/payment-intents/%s/events',[APaymentIntentId]))
-                       .Accept('application/json')
-                       .TokenBearer(AToken)
-                       .Get;
+    Result := EmptyStr;
+    try
+        LResponse := TRequest
+                         .New.BaseURL( _BASE_URL + _PAYMENT_LAST_STATUS.Replace('{payment_id}', APaymentIntentId) )
+                         .Accept('application/json')
+                         .TokenBearer(AToken)
+                         .Get;
 
-  Result := LResponse.Content;
-  if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR ÚLTIMO STATUS PAYMENT]');
+
+        Result := LResponse.Content;
+    except
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
-
 
 function GetPayment(const AToken, AIdPayment: String): String;
 var
   LResponse: IResponse;
 begin
-  if (AIdPayment = EmptyStr) then
-    raise Exception.Create('Id do Pagamento não informado');
+    Result := EmptyStr;
+    try
+        if (AIdPayment = EmptyStr) then
+           raise Exception.Create('Id do Pagamento não informado');
 
-  Result := EmptyStr;
-  LResponse := TRequest
-                       .New.BaseURL(Format('https://api.mercadopago.com/v1/payments/%s',[AIdPayment]))
+        LResponse := TRequest
+                       .New.BaseURL( _BASE_URL + _PAYMENT_GET.Replace('{payment_id}', AIdPayment) )
                        .Accept('application/json')
                        .TokenBearer(AToken)
                        .Get;
 
-  Result := LResponse.Content;
-  if (LResponse.StatusCode <> 200) then
-    raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR PAYMENT]');
+
+        Result := LResponse.Content;
+    except
+       on E:Exception do
+       begin
+           if LResponse = nil then
+              raise Exception.Create(e.Message)
+           else
+              raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+       end;
+    end;
 end;
 
 function CreateRefund(const AToken, AIdPayment: String; const AAmount: Double): String;
@@ -303,8 +318,7 @@ var
   LResponse: IResponse;
   LJson: TJSONObject;
 begin
-  Result := EmptyStr;
-  try
+    Result := EmptyStr;
     LJson := TJSONObject.Create;
 
     if(AAmount > 0) then
@@ -315,98 +329,112 @@ begin
     {$ENDIF}
 
     try
-      LResponse := TRequest
-                         .New.BaseURL(Format('https://api.mercadopago.com/v1/payments/%s/refunds',[AIdPayment]))
-                         .TokenBearer(AToken)
-                         .ContentType('application/json')
-                         .AddBody(LJson)
-                         .Post;
-    except
-        on e:exception do
-        begin
-          raise Exception.Create(e.Message);
-        end
-    end;
-  finally
-    if (LResponse.StatusCode <> 201) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
+       LResponse := TRequest
+                       .New.BaseURL( _BASE_URL + _REFOUND_CREATE.Replace('{payment_id}', AIdPayment) )
+                       .TokenBearer(AToken)
+                       .ContentType('application/json')
+                       .AddBody(LJson)
+                       .Post;
 
-  Result := LResponse.Content;
+       if LResponse.StatusCode <> 201 then
+          raise Exception.Create('[ERRO AO CRIAR REEMBOLSO]');
+
+       Result := LResponse.Content;
+    except
+       on E:Exception do
+          raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
 
 function GetRefund(const AToken, AIdPayment: String; AIdRefund: String): String;
 var
   LResponse: IResponse;
-  LJson: TJSONObject;
 begin
-
-  if (AIdPayment = EmptyStr) then
-    raise Exception.Create('Id do Pagamento não informado');
-
-  if (AIdRefund = EmptyStr) then
-    raise Exception.Create('Id do Estorno não informado');
-
-  try
+    Result := EmptyStr;
     try
-      Result := EmptyStr;
-      LResponse := TRequest
-                           .New.BaseURL(Format('https://api.mercadopago.com/v1/payments/%s/refunds/%s',[AIdPayment, AIdRefund]))
+        if (AIdPayment = EmptyStr) then
+           raise Exception.Create('Id do Pagamento não informado');
+
+        if (AIdRefund = EmptyStr) then
+           raise Exception.Create('Id do Estorno não informado');
+
+        LResponse := TRequest
+
+                           .New.BaseURL( _BASE_URL + _REFOUND_GET.Replace('{payment_id}', AIdPayment)
+                                                                 .Replace('{reembolso_id}', AIdRefund) )
                            .Accept('application/json')
                            .TokenBearer(AToken)
                            .Get;
-    except
-        on e:exception do
-        begin
-          raise Exception.Create(e.Message);
-        end
-    end;
-  finally
-    if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
-  end;
 
-  Result := LResponse.Content;
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR REEMBOLSO]');
+
+        Result := LResponse.Content;
+    except
+        on E:Exception do
+        begin
+           if LResponse = nil then
+              raise Exception.Create(e.Message)
+           else
+              raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+        end;
+    end;
 end;
 
 function GetPaymentIntentsEvents(const AToken: String; const AStartDate, AEndDate: TDate): String;
 var
   LResponse: IResponse;
 begin
-  if (AStartDate > AEndDate) then
-    raise Exception.Create('Data Inicial não pode ser maior que a data final');
+    Result := EmptyStr;
+    try
+        if (AStartDate > AEndDate) then
+           raise Exception.Create('Data Inicial não pode ser maior que a data final');
 
-  if (DaysBetween(AStartDate, AEndDate) > 30) then
-    raise Exception.Create('O intervalo não pode ser maior que 30 dias');
+        if (DaysBetween(AStartDate, AEndDate) > 30) then
+           raise Exception.Create('O intervalo não pode ser maior que 30 dias');
 
-  Result := EmptyStr;
-  LResponse := TRequest
-                       .New.BaseURL(Format('https://api.mercadopago.com/point/integration-api/payment-intents/events?startDate=%s&endDate=%s',
-                                           [FormatDateTime('yyyy-mm-dd',AStartDate), FormatDateTime('yyyy-mm-dd',AEndDate)]))
-                       .Accept('application/json')
-                       .TokenBearer(AToken)
-                       .Get;
+        LResponse := TRequest
+                         .New.BaseURL( _BASE_URL +
+                                       _PAYMENT_GET_INTENTS.Replace('{dti}', FormatDateTime('yyyy-mm-dd',AStartDate))
+                                                           .Replace('{dtf}', FormatDateTime('yyyy-mm-dd',AEndDate)) )
+                         .Accept('application/json')
+                         .TokenBearer(AToken)
+                         .Get;
 
-  Result := LResponse.Content;
-  if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR PAYMENT INTENTS EVENTS]');
+
+        Result := LResponse.Content;
+    except
+        on E:Exception do
+        begin
+           if LResponse = nil then
+              raise Exception.Create(e.Message)
+           else
+              raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+        end;
+    end;
 end;
 
 function GetPaymentsList(const AToken: String; const ADays: Integer): String;
 var
   LResponse: IResponse;
 begin
-  Result := EmptyStr;
-  LResponse := TRequest
-                       .New.BaseURL(Format('https://api.mercadopago.com/v1/payments/search?sort=date_created&criteria=desc&range=date_created&begin_date=NOW-%dDAYS&end_date=NOW',
-                                           [ADays]))
-                       .Accept('application/json')
-                       .TokenBearer(AToken)
-                       .Get;
+    Result := EmptyStr;
+    try
+        LResponse := TRequest.New
+                     .BaseURL( _BASE_URL + _PAYMENT_GET_LIST.Replace('{dias}', ADays.ToString) )
+                     .Accept('application/json')
+                     .TokenBearer(AToken)
+                     .Get;
 
-  Result := LResponse.Content;
-  if (LResponse.StatusCode <> 200) then
-     raise Exception.Create(Format('Erro ao efetuar a requisição %d', [LResponse.StatusCode]));
+        if LResponse.StatusCode <> 200 then
+           raise Exception.Create('[ERRO AO CONSULTAR PAYMENT LIST]');
+
+        Result := LResponse.Content;
+    except
+        on E:Exception do
+           raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
 end;
-
 end.
