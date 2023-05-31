@@ -116,6 +116,7 @@ type
     Image9: TImage;
     Image10: TImage;
     btListarTransacoes: TButton;
+    btnAutorizarApp: TButton;
     procedure btLimparCamposClick(Sender: TObject);
     procedure btListarDevicesClick(Sender: TObject);
     procedure btnAccessTokenClick(Sender: TObject);
@@ -130,6 +131,7 @@ type
     procedure btObterEstornoClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure btListarTransacoesClick(Sender: TObject);
+    procedure btnAutorizarAppClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -141,7 +143,7 @@ var
 implementation
 
 uses
-  uWebTEFMercadoPago;
+  uWebTEFMercadoPago, shellapi;
 
 {$R *.dfm}
 
@@ -257,6 +259,18 @@ begin
        on e:Exception do
           Memo4.Lines.Add(e.Message);
     end;
+end;
+
+procedure TForm1.btnAutorizarAppClick(Sender: TObject);
+begin
+ShellExecute(Handle,
+            'open',
+            PChar('https://auth.mercadopago.com.br/authorization?client_id='+edtClientId.Text+
+            '&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri='+edtRedirectUrl.Text+'')
+            ,nil
+            ,nil
+            ,SW_SHOWMAXIMIZED);
+
 end;
 
 procedure TForm1.btListarTransacoesClick(Sender: TObject);
