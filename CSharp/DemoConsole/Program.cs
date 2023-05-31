@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using WebTEFMercadoPago;
 
 
@@ -17,23 +18,35 @@ namespace DemoConsole
                    _code = "your TG code", 
                    _redirectUri = "your redirect uri",
                    _accessToken = "access token generate", 
-                   _refreshToken = "new code TG";
+                   _refreshToken = "new code TG",
+                   _url = $"https://auth.mercadopago.com.br/authorization?client_id={_clientId}&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri={_redirectUri}";
 
             bool _refreshCredential = false;
 
             string _modeOperation = "PDV"; // PDV or STANDALONE
-                         
+
+            //Authorize Application
+            try
+            {
+                var process = Process.Start(_url);                
+                await Task.Run(() => process.WaitForExit());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao abrir o navegador: " + ex.Message);
+            }
+
 
             //Generate first credentials
-            //if (_accessToken == null)
-            //{
-            //    CreateAccessToken credenciais = new CreateAccessToken();
-            //    var accessToken = await credenciais.GetAccessToken(_clientId, _clientSecret, _code, _redirectUri);
-            //    _accessToken = accessToken.access_token;
-            //    _refreshToken = accessToken.refresh_token;
+            if (_accessToken == null)
+            {
+                CreateAccessToken credenciais = new CreateAccessToken();
+                var accessToken = await credenciais.GetAccessToken(_clientId, _clientSecret, _code, _redirectUri);
+                _accessToken = accessToken.access_token;
+                _refreshToken = accessToken.refresh_token;
 
-            //    Console.WriteLine($"First AccessToken: {accessToken.access_token}");
-            //}
+                Console.WriteLine($"First AccessToken: {accessToken.access_token}");
+            }
 
             //Refresh Credentials
             if (_refreshCredential) 
