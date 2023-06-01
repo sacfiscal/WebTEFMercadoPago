@@ -395,7 +395,7 @@ begin
 
         LResponse := TRequest
                          .New.BaseURL( _BASE_URL +
-                                       _PAYMENT_GET_INTENTS.Replace('{dti}', FormatDateTime('yyyy-mm-dd',AStartDate))
+                                       _PAYMENT_GET_INTENTS_EVENTS.Replace('{dti}', FormatDateTime('yyyy-mm-dd',AStartDate))
                                                            .Replace('{dtf}', FormatDateTime('yyyy-mm-dd',AEndDate)) )
                          .Accept('application/json')
                          .TokenBearer(AToken)
