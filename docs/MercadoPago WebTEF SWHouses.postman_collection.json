@@ -372,7 +372,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"value": "",
 									"type": "string"
 								}
 							]
@@ -530,7 +530,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"value": "",
 									"type": "string"
 								}
 							]
@@ -618,32 +618,32 @@
 		},
 		{
 			"key": "access_token",
-			"value": "APP_USR-4688644979731832-041412-45df35b451a1cae386b4dc974b664551-323709768"
+			"value": ""
 		},
 		{
 			"key": "id_terminal",
-			"value": "GERTEC_MP35P__8701442341443345"
+			"value": ""
 		},
 		{
 			"key": "refresh_token",
-			"value": "TG-644f0d66d88dfb000101d9fa-323709768",
+			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "guid_pagto",
-			"value": "b15e78a3-78de-4dfe-988b-7412d7151fbc"
+			"value": ""
 		},
 		{
 			"key": "id_pagto",
-			"value": "57031040004"
+			"value": ""
 		},
 		{
 			"key": "idPgtoAEstornar",
-			"value": "57889933796"
+			"value": ""
 		},
 		{
 			"key": "idEstorno",
-			"value": "1362755842"
+			"value": ""
 		}
 	]
 }

@@ -19,7 +19,7 @@ namespace DemoConsole
                    _redirectUri = "your redirect uri",
                    _accessToken = "access token generate", 
                    _refreshToken = "new code TG",
-                   _url = $"https://auth.mercadopago.com.br/authorization?client_id={_clientId}&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri={_redirectUri}";
+                   _url_authorization = $"https://auth.mercadopago.com.br/authorization?client_id={_clientId}&response_type=code&platform_id=mp&state=RANDOM_ID&redirect_uri={_redirectUri}";
 
             bool _refreshCredential = false;
 
@@ -28,7 +28,7 @@ namespace DemoConsole
             //Authorize Application
             try
             {
-                var process = Process.Start(_url);                
+                var process = Process.Start(_url_authorization);                
                 await Task.Run(() => process.WaitForExit());
             }
             catch (Exception ex)
