@@ -117,11 +117,11 @@ function ChangeOperatingMode(const AToken, ADevice, ANewMode: String): String;
 var
   LResponse: IResponse;
   LJson: TJSONObject;
-  texto: String;
 begin
+  {TODO -oFabianoMorais -cWarning: Método PATCH não implementado no RESTRequest4Delphi-4.0.7,
+    utilizando PUT, que gera erro. Corrigido e enviado PULL Request ao RESTRequest4Delphi}
   Result := EmptyStr;
   LJson  := TJSONObject.Create;
-
   try
     LJson.Add('operating_mode', ANewMode);
     LResponse := TRequest
@@ -149,36 +149,32 @@ var
   LResponse: IResponse;
   LJson, LPayment, LAdditionalInfo: TJSONObject;
 begin
-  Result          := EmptyStr;
-  LJson           := TJSONObject.Create;
-  LPayment        := TJSONObject.Create;
-  LAdditionalInfo := TJSONObject.Create;
-
+  Result := EmptyStr;
   try
+    if ADevice.Trim = EmptyStr then
+      raise Exception.Create('Código da Maquininha não informado');
     if (AInstallments > 1) and
       ((AAmount/AInstallments) < 5) then
-      raise Exception.Create('Valor da parcela n�o pode ser menor que R% 5,00');
+      raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
 
-    LJson.Add('amount', AAmount);//Trunc(AAmount*100));
-   // LJson.Add('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
+    LJson           := TJSONObject.Create;
+    LPayment        := TJSONObject.Create;
+    LAdditionalInfo := TJSONObject.Create;
 
+    LJson.Add('amount', AAmount );
     LJson.Add('description', ADescription);
+
     if(AType = 'credit_card') then
     begin
       LPayment.Add('installments', AInstallments);
       LPayment.Add('installments_cost', AInstallmentsCost);
-
-      //LPayment.Add('installments', TJSONNumber.Create(AInstallments));
-      //LPayment.Add('installments_cost', TJSONNumber.Create(AInstallmentsCost));
     end;
 
     LPayment.Add('type', AType);
     LJson.Add('payment', LPayment);
+
     LAdditionalInfo.Add('external_reference', AExternalReference);
-
     LAdditionalInfo.Add('print_on_terminal', APrintOnTerminal);
-    //LAdditionalInfo.Add('print_on_terminal', TJSONBool.Create(APrintOnTerminal));
-
     LJson.Add('additional_info', LAdditionalInfo);
 
     LResponse := TRequest
@@ -193,7 +189,7 @@ begin
 
     Result := LResponse.Content;
   except
-    on E:Exception do
+    on e: Exception do
     begin
       if LResponse = nil then
         raise Exception.Create(e.Message)
@@ -209,12 +205,18 @@ var
 begin
   Result := EmptyStr;
   try
+    if (ADevice.Trim = EmptyStr) then
+      raise Exception.Create('Id da Maquininha não informado');
+
+    if (APaymentIntentId.Trim = EmptyStr) then
+      raise Exception.Create('Id Intenção de Pagamento não informado');
+
     LResponse := TRequest
-                     .New.BaseURL( _BASE_URL + _PAYMENT_CANCEL.Replace('{device_id}', ADevice)
+                         .New.BaseURL( _BASE_URL + _PAYMENT_CANCEL.Replace('{device_id}', ADevice)
                                                               .Replace('{payment_id}', APaymentIntentId) )
-                     .Accept('application/json')
-                     .TokenBearer(AToken)
-                     .Delete;
+                         .Accept('application/json')
+                         .TokenBearer(AToken)
+                         .Delete;
 
     if LResponse.StatusCode <> 200 then
       raise Exception.Create('[ERRO AO CANCELAR PAYMENT]');
@@ -222,7 +224,12 @@ begin
     Result := LResponse.Content;
   except
     on E:Exception do
-      raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    begin
+      if LResponse = nil then
+        raise Exception.Create(e.Message)
+      else
+        raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
   end;
 end;
 
@@ -232,6 +239,9 @@ var
 begin
   Result := EmptyStr;
   try
+    if (APaymentIntentId.Trim = EmptyStr) then
+      raise Exception.Create('Id Intenção do Pagamento não informado');
+
     LResponse := TRequest
                          .New.BaseURL( _BASE_URL + _PAYMENT_GET_INTENTS.Replace('{payment_id}', APaymentIntentId) )
                          .Accept('application/json')
@@ -244,7 +254,12 @@ begin
     Result := LResponse.Content;
   except
     on E:Exception do
-      raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    begin
+      if LResponse = nil then
+        raise Exception.Create(e.Message)
+      else
+        raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
   end;
 end;
 
@@ -254,6 +269,9 @@ var
 begin
   Result := EmptyStr;
   try
+    if (APaymentIntentId.Trim = EmptyStr) then
+      raise Exception.Create('Id do Pagamento não informado');
+
     LResponse := TRequest
                          .New.BaseURL( _BASE_URL + _PAYMENT_LAST_STATUS.Replace('{payment_id}', APaymentIntentId) )
                          .Accept('application/json')
@@ -261,12 +279,17 @@ begin
                          .Get;
 
     if LResponse.StatusCode <> 200 then
-      raise Exception.Create('[ERRO AO CONSULTAR �LTIMO STATUS PAYMENT]');
+      raise Exception.Create('[ERRO AO CONSULTAR ÚLTIMO STATUS PAYMENT]');
 
     Result := LResponse.Content;
   except
-     on E:Exception do
+    on E:Exception do
+    begin
+      if LResponse = nil then
+        raise Exception.Create(e.Message)
+      else
         raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
   end;
 end;
 
@@ -277,7 +300,7 @@ begin
   Result := EmptyStr;
   try
     if (AIdPayment = EmptyStr) then
-      raise Exception.Create('Id do Pagamento n�o informado');
+      raise Exception.Create('Id do Pagamento não informado');
 
     LResponse := TRequest
                          .New.BaseURL( _BASE_URL + _PAYMENT_GET.Replace('{payment_id}', AIdPayment) )
@@ -306,11 +329,14 @@ var
   LJson: TJSONObject;
 begin
   Result := EmptyStr;
+
+  if (AIdPayment.Trim = EmptyStr) then
+    raise Exception.Create('Id do Pagamento não informado');
+
   LJson := TJSONObject.Create;
 
   if(AAmount > 0) then
     LJson.Add('amount', AAmount);
-    //LJson.AddPair('amount', TJSONNumber.Create(AAmount));//Trunc(AAmount*100));
 
   try
     LResponse := TRequest
@@ -326,7 +352,12 @@ begin
     Result := LResponse.Content;
   except
     on E:Exception do
-      raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    begin
+      if LResponse = nil then
+        raise Exception.Create(e.Message)
+      else
+        raise Exception.Create(e.Message + sLineBreak + LResponse.Content);
+    end;
   end;
 end;
 
@@ -337,10 +368,10 @@ begin
   Result := EmptyStr;
   try
     if (AIdPayment = EmptyStr) then
-      raise Exception.Create('Id do Pagamento n�o informado');
+      raise Exception.Create('Id do Pagamento não informado');
 
     if (AIdRefund = EmptyStr) then
-      raise Exception.Create('Id do Estorno n�o informado');
+      raise Exception.Create('Id do Estorno não informado');
 
     LResponse := TRequest
                          .New.BaseURL( _BASE_URL + _REFOUND_GET.Replace('{payment_id}', AIdPayment)
@@ -371,10 +402,10 @@ begin
   Result := EmptyStr;
   try
     if (AStartDate > AEndDate) then
-      raise Exception.Create('Data Inicial n�o pode ser maior que a data final');
+      raise Exception.Create('Data Inicial não pode ser maior que a data final');
 
     if (DaysBetween(AStartDate, AEndDate) > 30) then
-      raise Exception.Create('O intervalo n�o pode ser maior que 30 dias');
+      raise Exception.Create('O intervalo não pode ser maior que 30 dias');
 
     LResponse := TRequest
                          .New.BaseURL( _BASE_URL + _PAYMENT_GET_INTENTS_EVENTS.Replace('{dti}', FormatDateTime('yyyy-mm-dd',AStartDate))

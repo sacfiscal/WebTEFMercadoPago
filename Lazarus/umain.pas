@@ -177,6 +177,8 @@ var
   JSONResponse: TJSONData;
   ResponseContent: string;
 begin
+  {TODO -oFabianoMorais -cWarning: Método PATCH não implementado no RESTRequest4Delphi-4.0.7,
+    utilizando PUT, que gera erro. Corrigido e enviado PULL Request ao RESTRequest4Delphi}
   Memo2.Lines.Clear;
   try
     if (rbPDV.Checked) then
@@ -223,17 +225,22 @@ end;
 
 procedure TFMain.btObterEstornoClick(Sender: TObject);
 var
- JSONResponse: TJSONData;
- ResponseContent: string;
+  JSONResponse: TJSONData;
+  ResponseContent: string;
 begin
   Memo4.Lines.Clear;
   try
     ResponseContent := GetRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, edtIdEstorno.Text);
-    JSONResponse := GetJSON(ResponseContent);
-    edtIdPagtoEstornado.Text := JSONResponse.FindPath('payment_id').AsString;
-    edtValorEstornado.Text := JSONResponse.FindPath('amount').AsString;
 
-    Memo4.Lines.Add(JSONResponse.FormatJSON());
+    JSONResponse := GetJSON(ResponseContent);
+    try
+      edtIdPagtoEstornado.Text := JSONResponse.FindPath('payment_id').AsString;
+      edtValorEstornado.Text := JSONResponse.FindPath('amount').AsString;
+
+      Memo4.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
     on e:Exception do
       Memo4.Lines.Add(e.Message);
@@ -250,13 +257,19 @@ begin
     ResponseContent := GetPaymentIntents(edtAccessToken.Text, edtIntencaoPagto.text);
 
     JSONResponse := GetJSON(ResponseContent);
-    payment      := JSONResponse.FindPath('payment');
+    try
+      payment := JSONResponse.FindPath('payment');
+      if (payment.Count > 1) then
+      begin
+        edtIdPagto.Text        := payment.FindPath('id').AsString;
+        edtIdPagtoEstorno.Text := payment.FindPath('id').AsString;
+      end;
+      edtStatusPagto.Text    := JSONResponse.FindPath('state').AsString;
 
-    edtIdPagto.Text        := payment.FindPath('id').AsString;
-    edtIdPagtoEstorno.Text := payment.FindPath('id').AsString;
-    edtStatusPagto.Text    := JSONResponse.FindPath('state').AsString;
-
-    Memo3.Lines.Add(JSONResponse.FormatJSON());
+      Memo3.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
     on e:Exception do
       Memo3.Lines.Add(e.Message);
@@ -271,10 +284,15 @@ begin
   Memo4.Lines.Clear;
   try
     ResponseContent := CancelPayment(edtAccessToken.Text, edtDevice.Text, edtIntencaoPagto.Text);
-    JSONResponse := GetJSON(ResponseContent);
-    edtIdCancelamento.Text := JSONResponse.FindPath('id').AsString;
 
-    Memo4.Lines.Add(JSONResponse.FormatJSON());
+    JSONResponse := GetJSON(ResponseContent);
+    try
+      edtIdCancelamento.Text := JSONResponse.FindPath('id').AsString;
+
+      Memo4.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
    on e:Exception do
      Memo4.Lines.Add(e.Message);
@@ -283,7 +301,13 @@ end;
 
 procedure TFMain.FormShow(Sender: TObject);
 begin
-
+  edtClientId.Text := '';
+  edtClientSecret.Text := '';
+  edtRedirectUrl.Text := '';
+  edtTGCode.Text := '';
+  edtAccessToken.Text := '';
+  edtRefreshToken.Text := '';
+  edtDevice.Text := '';
 end;
 
 procedure TFMain.btnAccessTokenClick(Sender: TObject);
@@ -295,7 +319,7 @@ begin
   try
     ResponseContent := CreateAccessToken(edtClientSecret.Text, edtClientId.Text, edtTGCode.Text, edtRedirectURL.Text);
 
-    JSONResponse         := GetJSON(ResponseContent);
+    JSONResponse := GetJSON(ResponseContent);
     try
       edtAccessToken.Text  := JSONResponse.FindPath('access_token').AsString;
       edtRefreshToken.Text := JSONResponse.FindPath('refresh_token').AsString;
@@ -324,7 +348,7 @@ end;
 procedure TFMain.btCriarPagtoClick(Sender: TObject);
 var
   JSONResponse: TJSONData;
-  ResponseContent, TipoPagto, CustoParcela, idPagto: string;
+  ResponseContent, TipoPagto, CustoParcela: string;
   valor : double;
   parcelas: integer;
 begin
@@ -340,7 +364,7 @@ begin
       TipoPagto := 'credit_card';
       if (parcelas > 1) and
        ((valor/parcelas) < 5) then
-       raise Exception.Create('Valor da parcela não pode ser menor que R% 5,00');
+       raise Exception.Create('Valor da parcela não pode ser menor que R$ 5,00');
     end;
 
     if (cbCustoParcelas.ItemIndex = 0) then
@@ -361,10 +385,13 @@ begin
                                      chkImprimir.Checked);
 
     JSONResponse := GetJSON(ResponseContent);
-    idPagto := JSONResponse.FindPath('id').AsString;
-    edtIntencaoPagto.Text := idPagto;
+    try
+      edtIntencaoPagto.Text := JSONResponse.FindPath('id').AsString;
 
-    Memo3.Lines.Add(JSONResponse.FormatJSON());
+      Memo3.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
     on e:Exception do
       Memo3.Lines.Add(e.Message);
@@ -381,20 +408,24 @@ begin
     ResponseContent := GetPayment(edtAccessToken.Text, edtIdPagto.text);
 
     JSONResponse := GetJSON(ResponseContent);
-    edtCodAutorizacao.Text := JSONResponse.FindPath('authorization_code').AsString;
+    try
+      edtCodAutorizacao.Text := JSONResponse.FindPath('authorization_code').AsString;
 
-    fee_details := JSONResponse.FindPath('fee_details[0]');
-    if ( fee_details <> Nil ) then
-    begin
-      if fee_details.Count > 0 then
-        edtTaxa.Text := fee_details.FindPath('amount').AsString;
+      fee_details := JSONResponse.FindPath('fee_details[0]');
+      if ( fee_details <> Nil ) then
+      begin
+        if fee_details.Count > 0 then
+          edtTaxa.Text := fee_details.FindPath('amount').AsString;
+      end;
+
+      transaction_details   := JSONResponse.FindPath('transaction_details');
+      edtValorRecebido.Text := transaction_details.FindPath('net_received_amount').AsString;
+      edtBandeira.Text      := JSONResponse.FindPath('payment_method_id').AsString;
+
+      Memo3.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
     end;
-
-    transaction_details   := JSONResponse.FindPath('transaction_details');
-    edtValorRecebido.Text := transaction_details.FindPath('net_received_amount').AsString;
-    edtBandeira.Text      := JSONResponse.FindPath('payment_method_id').AsString;
-
-    Memo3.Lines.Add(JSONResponse.FormatJSON());
   except
      on e:Exception do
         Memo3.Lines.Add(e.Message);
@@ -410,17 +441,21 @@ begin
   Memo4.Lines.Clear;
   try
     if(edtValorEstorno.Text <> '') then
-       valor := StrToFloat(StringReplace(edtValorEstorno.Text, ',', '', [rfReplaceAll]))
+      valor := StrToFloat(StringReplace(edtValorEstorno.Text, ',', '', [rfReplaceAll]))
     else
-       valor := 0;
+      valor := 0;
 
     ResponseContent := CreateRefund(edtAccessToken.Text, edtIdPagtoEstorno.Text, valor);
 
     JSONResponse          := GetJSON(ResponseContent);
-    edtIdEstorno.Text     := JSONResponse.FindPath('id').AsString;
-    edtStatusEstorno.Text := JSONResponse.FindPath('status').AsString;
+    try
+      edtIdEstorno.Text     := JSONResponse.FindPath('id').AsString;
+      edtStatusEstorno.Text := JSONResponse.FindPath('status').AsString;
 
-    Memo4.Lines.Add(JSONResponse.FormatJSON());
+      Memo4.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
      on e:Exception do
         Memo4.Lines.Add(e.Message);
@@ -460,9 +495,13 @@ begin
   Memo5.Lines.Clear;
   try
     ResponseContent := GetPaymentsList(edtAccessToken.Text, 30);
-    JSONResponse := GetJSON(ResponseContent);
 
-    Memo5.Lines.Add(JSONResponse.FormatJSON());
+    JSONResponse := GetJSON(ResponseContent);
+    try
+      Memo5.Lines.Add(JSONResponse.FormatJSON());
+    finally
+      JSONResponse.Free;
+    end;
   except
      on e:Exception do
         Memo5.Lines.Add(e.Message);
