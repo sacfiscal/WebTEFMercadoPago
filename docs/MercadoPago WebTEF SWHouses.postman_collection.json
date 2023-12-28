@@ -272,7 +272,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"url": {
 							"raw": "https://api.mercadopago.com/point/integration-api/devices/{{id_terminal}}}/payment-intents/{{guid_pagto}}",
