@@ -372,7 +372,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
 									"type": "string"
 								}
 							]
@@ -530,7 +530,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
 									"type": "string"
 								}
 							]
@@ -577,6 +577,1077 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "QRCode PIX",
+			"item": [
+				{
+					"name": "1 - Loja",
+					"item": [
+						{
+							"name": "Criar Loja",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"external_id\": \"LJTESTE\",\r\n    \"location\": {\r\n        \"street_number\": \"62\",\r\n        \"street_name\": \"Rua Pomerania\",\r\n        \"city_name\": \"Nova Petrópolis\",\r\n        \"state_name\": \"Rio Grande do Sul\",\r\n        \"latitude\": -29.3562239,\r\n        \"longitude\": -51.1377301,\r\n        \"reference\": \"Prox. Casa azul\"\r\n    },\r\n    \"name\": \"Loja Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.mercadopago.com/users/{{seller_id}}/stores",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"users",
+										"{{seller_id}}",
+										"stores"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Criar Loja",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"external_id\": \"LJTESTE\",\r\n    \"location\": {\r\n        \"street_number\": \"62\",\r\n        \"street_name\": \"Rua Pomerania\",\r\n        \"city_name\": \"Nova Petrópolis\",\r\n        \"state_name\": \"Rio Grande do Sul\",\r\n        \"latitude\": -29.3562239,\r\n        \"longitude\": -51.1377301,\r\n        \"reference\": \"Prox. Casa azul\"\r\n    },\r\n    \"name\": \"Loja Teste\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://api.mercadopago.com/users/323709768/stores",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"users",
+												"323709768",
+												"stores"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 12:00:54 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "356"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "x-request-id",
+											"value": "8436aa5d-26bc-41b0-9eec-13218f6ef560"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"59378604\",\n    \"name\": \"Loja Teste\",\n    \"date_creation\": \"2024-01-05T12:00:54.157Z\",\n    \"location\": {\n        \"address_line\": \"Rua Pomerania 62, Nova Petrópolis, Rio Grande do Sul, Brasil\",\n        \"reference\": \"Prox. Casa azul\",\n        \"latitude\": -29.3562239,\n        \"longitude\": -51.1377301,\n        \"id\": \"TUxCQ05PVmMyMjU1\",\n        \"type\": \"city\",\n        \"city\": \"Nova Petrópolis\",\n        \"state_id\": \"BR-RS\"\n    },\n    \"external_id\": \"LJTESTE\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Buscar Lojas",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/users/{{seller_id}}/stores/search",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"users",
+										"{{seller_id}}",
+										"stores",
+										"search"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Buscar Lojas",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://api.mercadopago.com/users/323709768/stores/search",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"users",
+												"323709768",
+												"stores",
+												"search"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 21:53:57 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "709"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "x-request-id",
+											"value": "3c3cf668-1ea7-4f2c-b52c-b2341bb08840"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"paging\": {\n        \"total\": 2,\n        \"offset\": 0,\n        \"limit\": 50\n    },\n    \"results\": [\n        {\n            \"id\": \"54315556\",\n            \"name\": \"Loja\",\n            \"date_creation\": \"2023-03-20T17:50:28.984Z\",\n            \"location\": {\n                \"address_line\": \"R. Pomerania 62, 95150-000, Nova Petrópolis, Rio Grande do Sul, Brasil\",\n                \"reference\": \"\",\n                \"latitude\": -29.3854744,\n                \"longitude\": -51.1202925,\n                \"id\": \"TUxCQ05PVmMyMjU1\",\n                \"type\": \"city\",\n                \"state_id\": \"BR-RS\"\n            }\n        },\n        {\n            \"id\": \"59378604\",\n            \"name\": \"Loja Teste\",\n            \"date_creation\": \"2024-01-05T12:00:54.157Z\",\n            \"location\": {\n                \"address_line\": \"Rua Pomerania 62, Nova Petrópolis, Rio Grande do Sul, Brasil\",\n                \"reference\": \"Prox. Casa azul\",\n                \"latitude\": -29.3562239,\n                \"longitude\": -51.1377301,\n                \"id\": \"TUxCQ05PVmMyMjU1\",\n                \"type\": \"city\",\n                \"city\": \"Nova Petrópolis\",\n                \"state_id\": \"BR-RS\"\n            },\n            \"external_id\": \"LJTESTE\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Excluir Loja",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/users/{{seller_id}}/stores/{{store_id}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"users",
+										"{{seller_id}}",
+										"stores",
+										"{{store_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Excluir Loja",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "https://api.mercadopago.com/users/323709768/stores/54315556",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"users",
+												"323709768",
+												"stores",
+												"54315556"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 21:55:44 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "35"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "x-request-id",
+											"value": "6c145d8c-a8ad-4f6f-8261-af3752bfbf00"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"store\": 54315556,\n    \"user\": 323709768\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "2 - Caixa",
+					"item": [
+						{
+							"name": "Criar Caixa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"category\":null,\r\n    \"external_id\":\"Caixa0001\",\r\n    \"external_store_id\":\"LJTESTE\",\r\n    \"fixed_amount\":false,\r\n    \"name\":\"Caixa1 Teste\",\r\n    \"store_id\":\"59378604\"  \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.mercadopago.com/pos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"pos"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Criar Caixa",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"category\":null,\r\n    \"external_id\":\"Caixa0001\",\r\n    \"external_store_id\":\"LJTESTE\",\r\n    \"fixed_amount\":false,\r\n    \"name\":\"Caixa1 Teste\",\r\n    \"store_id\":\"59378604\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://api.mercadopago.com/pos",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"pos"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 21:57:20 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "1057"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "vary",
+											"value": "Accept,Accept-Encoding"
+										},
+										{
+											"key": "cache-control",
+											"value": "max-age=0"
+										},
+										{
+											"key": "x-request-id",
+											"value": "4192c477-3c27-4e1f-a1cf-c02536b461ef"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 93962270,\n    \"qr\": {\n        \"image\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.png\",\n        \"template_document\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/template_eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.pdf\",\n        \"template_image\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/template_eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.png\"\n    },\n    \"status\": \"active\",\n    \"date_created\": \"2024-01-05T17:57:20.000-04:00\",\n    \"date_last_updated\": \"2024-01-05T17:57:20.000-04:00\",\n    \"uuid\": \"eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249\",\n    \"user_id\": 323709768,\n    \"name\": \"Caixa1 Teste\",\n    \"fixed_amount\": false,\n    \"store_id\": \"59378604\",\n    \"external_store_id\": \"LJTESTE\",\n    \"external_id\": \"Caixa0001\",\n    \"site\": \"MLB\",\n    \"qr_code\": \"00020101021226900014BR.GOV.BCB.PIX2568pix-qr.mercadopago.com/instore/p/v2/eaf157edf667440d92afa0c2ac988d9043530016com.mercadolibre0129https://mpago.la/pos/939622705204000053039865802BR5910Marco Polo6009SAO PAULO62070503***63048866\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Buscar Caixa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/pos",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"pos"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Buscar Caixa",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://api.mercadopago.com/pos",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"pos"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 22:00:13 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "555"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "vary",
+											"value": "Accept,Accept-Encoding"
+										},
+										{
+											"key": "cache-control",
+											"value": "max-age=0"
+										},
+										{
+											"key": "x-request-id",
+											"value": "3bd95d54-170e-4757-a4fe-1dc384967246"
+										},
+										{
+											"key": "content-encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"paging\": {\n        \"total\": 3,\n        \"offset\": 0,\n        \"limit\": 30\n    },\n    \"results\": [\n        {\n            \"user_id\": 323709768,\n            \"name\": \"PointPro2\",\n            \"fixed_amount\": false,\n            \"id\": 77323489,\n            \"qr\": {\n                \"image\": \"https://www.mercadopago.com/instore/merchant/qr/77323489/c1882fdbbede487f8b564ec35c69eace2efd66b47f0b48d2840b334db3c78600.png\",\n                \"template_document\": \"https://www.mercadopago.com/instore/merchant/qr/77323489/template_c1882fdbbede487f8b564ec35c69eace2efd66b47f0b48d2840b334db3c78600.pdf\",\n                \"template_image\": \"https://www.mercadopago.com/instore/merchant/qr/77323489/template_c1882fdbbede487f8b564ec35c69eace2efd66b47f0b48d2840b334db3c78600.png\"\n            },\n            \"date_created\": \"2023-03-20T13:50:28.000-04:00\",\n            \"date_last_updated\": \"2023-05-08T13:41:49.000-04:00\"\n        },\n        {\n            \"user_id\": 323709768,\n            \"name\": \"PointSmart\",\n            \"id\": 80106397,\n            \"qr\": {\n                \"image\": \"https://www.mercadopago.com/instore/merchant/qr/80106397/01566f61b97f4eb58061224eab2b9cbf8ef4ad118fdd4197a0950f5ce28c13c6.png\",\n                \"template_document\": \"https://www.mercadopago.com/instore/merchant/qr/80106397/template_01566f61b97f4eb58061224eab2b9cbf8ef4ad118fdd4197a0950f5ce28c13c6.pdf\",\n                \"template_image\": \"https://www.mercadopago.com/instore/merchant/qr/80106397/template_01566f61b97f4eb58061224eab2b9cbf8ef4ad118fdd4197a0950f5ce28c13c6.png\"\n            },\n            \"date_created\": \"2023-05-08T13:42:03.000-04:00\",\n            \"date_last_updated\": \"2023-05-08T13:42:03.000-04:00\"\n        },\n        {\n            \"user_id\": 323709768,\n            \"name\": \"Caixa1 Teste\",\n            \"fixed_amount\": false,\n            \"store_id\": \"59378604\",\n            \"external_id\": \"Caixa0001\",\n            \"id\": 93962270,\n            \"qr\": {\n                \"image\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.png\",\n                \"template_document\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/template_eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.pdf\",\n                \"template_image\": \"https://www.mercadopago.com/instore/merchant/qr/93962270/template_eaf157edf667440d92afa0c2ac988d90bb6778cf2f5340d5b3aa173f2b841249.png\"\n            },\n            \"date_created\": \"2024-01-05T17:57:20.000-04:00\",\n            \"date_last_updated\": \"2024-01-05T17:57:20.000-04:00\",\n            \"external_store_id\": \"LJTESTE\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Excluir Caixa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/pos/{{caixa_id}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"pos",
+										"{{caixa_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "3 - Criar Pagamento",
+					"item": [
+						{
+							"name": "Criar Pagamento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cash_out\":\r\n    { \r\n        \"amount\":0 // sempre 0\r\n    },\r\n    \"external_reference\":\"114204\",\r\n    \"description\":\"Venda CashBox\", \r\n    \"items\":\r\n    [\r\n        {\r\n            \"sku_number\":\"1\",\r\n            \"category\":\"Venda CashBox\",\r\n            \"title\":\"Venda CashBox\",\r\n            \"description\":\"Venda CashBox\",\r\n            \"unit_measure\":\"Unidade\",\r\n            \"quantity\":1,\r\n            \"unit_price\":1.63,\r\n            \"total_amount\": 1.63\r\n        }\r\n    ],\r\n    \"notification_url\":null, // endereco webhook\r\n    \"expiration_date\": \"2024-01-05T19:25:56.559-04:00\", //datetime expiração pagto - datetime.now + 5min\r\n    \"sponsor\":\r\n    {\r\n        \"id\": 1156723522 //id do user da software house\r\n    },\r\n    \"title\":\"Compra em Panificadora\", // texto impresso no comprovante similar oa cartao de credito\r\n    \"total_amount\":1.63\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.mercadopago.com/instore/orders/qr/seller/collectors/{{seller_id}}/pos/{{external_id}}/qrs",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"instore",
+										"orders",
+										"qr",
+										"seller",
+										"collectors",
+										"{{seller_id}}",
+										"pos",
+										"{{external_id}}",
+										"qrs"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Criar Pagamento",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"cash_out\":\r\n    { \r\n        \"amount\":0 // sempre 0\r\n    },\r\n    \"external_reference\":\"114204\",\r\n    \"description\":\"Venda CashBox\", \r\n    \"items\":\r\n    [\r\n        {\r\n            \"sku_number\":\"1\",\r\n            \"category\":\"Venda CashBox\",\r\n            \"title\":\"Venda CashBox\",\r\n            \"description\":\"Venda CashBox\",\r\n            \"unit_measure\":\"Unidade\",\r\n            \"quantity\":1,\r\n            \"unit_price\":1.63,\r\n            \"total_amount\": 1.63\r\n        }\r\n    ],\r\n    \"notification_url\":null, // endereco webhook\r\n    \"expiration_date\": \"2024-01-05T19:25:56.559-04:00\", //datetime expiração pagto - datetime.now + 5min\r\n    \"sponsor\":\r\n    {\r\n        \"id\": 1156723522 //id do user da software house\r\n    },\r\n    \"title\":\"Compra em Panificadora\", // texto impresso no comprovante similar oa cartao de credito\r\n    \"total_amount\":1.63\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://api.mercadopago.com/instore/orders/qr/seller/collectors/323709768/pos/Caixa0001/qrs",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"instore",
+												"orders",
+												"qr",
+												"seller",
+												"collectors",
+												"323709768",
+												"pos",
+												"Caixa0001",
+												"qrs"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 22:21:01 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "250"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "x-request-id",
+											"value": "656af066-0378-449a-9878-f47e4633ed91"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"in_store_order_id\": \"b852a7d2-4b50-40e0-946c-f8ad15550bab\",\n    \"qr_data\": \"00020101021226940014BR.GOV.BCB.PIX2572pix-qr.mercadopago.com/instore/o/v2/b852a7d2-4b50-40e0-946c-f8ad15550bab5204000053039865802BR5910Marco Polo6009SAO PAULO62070503***6304B947\"\n}"
+								}
+							]
+						},
+						{
+							"name": "BuscarPagamento",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/merchant_orders/?external_reference={{external_reference}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"merchant_orders",
+										""
+									],
+									"query": [
+										{
+											"key": "external_reference",
+											"value": "{{external_reference}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "BuscarPagamento",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://api.mercadopago.com/merchant_orders/?external_reference=114204",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"merchant_orders",
+												""
+											],
+											"query": [
+												{
+													"key": "external_reference",
+													"value": "114204"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 05 Jan 2024 22:24:11 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "611"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "content-encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "6f7f992f-1253-41a6-ad2c-59e7cfe058a4"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"elements\": [\n        {\n            \"id\": 14690593965,\n            \"status\": \"closed\",\n            \"external_reference\": \"114204\",\n            \"preference_id\": \"323709768-5f8d53f0-5972-4a7e-b970-8c393162ec9c\",\n            \"payments\": [\n                {\n                    \"id\": 70068451456,\n                    \"transaction_amount\": 1.63,\n                    \"total_paid_amount\": 1.63,\n                    \"shipping_cost\": 0,\n                    \"currency_id\": \"BRL\",\n                    \"status\": \"approved\",\n                    \"status_detail\": \"accredited\",\n                    \"operation_type\": \"regular_payment\",\n                    \"date_approved\": \"2024-01-05T18:24:06.000-04:00\",\n                    \"date_created\": \"2024-01-05T18:24:06.000-04:00\",\n                    \"last_modified\": \"2024-01-05T18:24:06.000-04:00\",\n                    \"amount_refunded\": 0\n                }\n            ],\n            \"shipments\": [],\n            \"payouts\": [],\n            \"collector\": {\n                \"id\": 323709768,\n                \"email\": \"\",\n                \"nickname\": \"VIANAMARCOPOLO\"\n            },\n            \"marketplace\": \"MP-MKT-7235120071272834\",\n            \"notification_url\": null,\n            \"date_created\": \"2024-01-05T18:21:00.962-04:00\",\n            \"last_updated\": \"2024-01-05T18:24:06.258-04:00\",\n            \"sponsor_id\": 1156723522,\n            \"shipping_cost\": 0,\n            \"total_amount\": 1.63,\n            \"site_id\": \"MLB\",\n            \"paid_amount\": 1.63,\n            \"refunded_amount\": 0,\n            \"payer\": {\n                \"id\": 755820596,\n                \"email\": \"\"\n            },\n            \"items\": [\n                {\n                    \"id\": \"\",\n                    \"category_id\": \"Venda CashBox\",\n                    \"currency_id\": \"BRL\",\n                    \"description\": \"Venda CashBox\",\n                    \"picture_url\": null,\n                    \"title\": \"Venda CashBox\",\n                    \"quantity\": 1,\n                    \"unit_price\": 1.63\n                }\n            ],\n            \"cancelled\": false,\n            \"additional_info\": \"\",\n            \"application_id\": null,\n            \"is_test\": false,\n            \"order_status\": \"paid\"\n        }\n    ],\n    \"next_offset\": 1,\n    \"total\": 1\n}"
+								}
+							]
+						},
+						{
+							"name": "6.1 - Buscar Pagamento Detalhado Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.mercadopago.com/v1/payments/{{payment_id}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"mercadopago",
+										"com"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"{{payment_id}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "6.1 - Buscar Pagamento Detalhado",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://api.mercadopago.com/v1/payments/57031040004",
+											"protocol": "https",
+											"host": [
+												"api",
+												"mercadopago",
+												"com"
+											],
+											"path": [
+												"v1",
+												"payments",
+												"57031040004"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 19 Apr 2023 12:17:25 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json;charset=UTF-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "vary",
+											"value": "Accept,Accept-Encoding"
+										},
+										{
+											"key": "cache-control",
+											"value": "max-age=0"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "4fbf0551-dd67-40b1-bcc2-0c372cc59ae9"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=16070400; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "Content-Type"
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "PUT, GET, POST, DELETE, OPTIONS"
+										},
+										{
+											"key": "Access-Control-Max-Age",
+											"value": "86400"
+										},
+										{
+											"key": "Timing-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"accounts_info\": null,\n    \"acquirer_reconciliation\": [],\n    \"additional_info\": {\n        \"authentication_code\": null,\n        \"available_balance\": null,\n        \"nsu_processadora\": null\n    },\n    \"authorization_code\": \"334915\",\n    \"binary_mode\": true,\n    \"brand_id\": null,\n    \"build_version\": \"54.19.3-hotfix-6\",\n    \"call_for_authorize_id\": null,\n    \"captured\": true,\n    \"card\": {\n        \"bin\": \"55020958\",\n        \"cardholder\": {\n            \"identification\": {\n                \"number\": null,\n                \"type\": null\n            },\n            \"name\": \"{}\"\n        },\n        \"date_created\": \"2023-04-17T12:27:27.000-04:00\",\n        \"date_last_updated\": \"2023-04-17T12:27:27.000-04:00\",\n        \"expiration_month\": 8,\n        \"expiration_year\": 2029,\n        \"first_six_digits\": \"550209\",\n        \"id\": null,\n        \"last_four_digits\": \"0112\"\n    },\n    \"charges_details\": [\n        {\n            \"accounts\": {\n                \"from\": \"collector\",\n                \"to\": \"mp\"\n            },\n            \"amounts\": {\n                \"original\": 0.05,\n                \"refunded\": 0\n            },\n            \"client_id\": 0,\n            \"date_created\": \"2023-04-17T12:27:27.000-04:00\",\n            \"id\": \"57031040004-001\",\n            \"last_updated\": \"2023-04-17T12:27:27.000-04:00\",\n            \"metadata\": {},\n            \"name\": \"mercadopago_fee\",\n            \"refund_charges\": [],\n            \"reserve_id\": null,\n            \"type\": \"fee\"\n        }\n    ],\n    \"collector_id\": 323709768,\n    \"corporation_id\": null,\n    \"counter_currency\": null,\n    \"coupon_amount\": 0,\n    \"currency_id\": \"BRL\",\n    \"date_approved\": \"2023-04-17T12:27:29.000-04:00\",\n    \"date_created\": \"2023-04-17T12:27:27.000-04:00\",\n    \"date_last_updated\": \"2023-04-17T12:27:31.000-04:00\",\n    \"date_of_expiration\": null,\n    \"deduction_schema\": null,\n    \"description\": \"Venda presencial\",\n    \"differential_pricing_id\": null,\n    \"external_reference\": \"Pedido 001\",\n    \"fee_details\": [\n        {\n            \"amount\": 0.05,\n            \"fee_payer\": \"collector\",\n            \"type\": \"mercadopago_fee\"\n        }\n    ],\n    \"financing_group\": null,\n    \"id\": 57031040004,\n    \"installments\": 1,\n    \"integrator_id\": null,\n    \"issuer_id\": \"24\",\n    \"live_mode\": true,\n    \"marketplace_owner\": 1156723522,\n    \"merchant_account_id\": null,\n    \"merchant_number\": null,\n    \"metadata\": {\n        \"was_pin\": false,\n        \"payment_intent_id\": \"b15e78a3-78de-4dfe-988b-7412d7151fbc\",\n        \"pin_validation\": \"pin_not_validated\",\n        \"integration\": \"api\",\n        \"is_fallback\": false,\n        \"cdcvm_validation\": false\n    },\n    \"money_release_date\": \"2023-04-17T12:27:29.000-04:00\",\n    \"money_release_schema\": null,\n    \"money_release_status\": null,\n    \"notification_url\": null,\n    \"operation_type\": \"pos_payment\",\n    \"order\": {},\n    \"payer\": {\n        \"email\": null,\n        \"entity_type\": null,\n        \"first_name\": null,\n        \"id\": \"151211818\",\n        \"identification\": {\n            \"number\": null,\n            \"type\": null\n        },\n        \"last_name\": null,\n        \"operator_id\": null,\n        \"phone\": {\n            \"area_code\": null,\n            \"extension\": null,\n            \"number\": null\n        },\n        \"type\": null\n    },\n    \"payment_method\": {\n        \"id\": \"master\",\n        \"issuer_id\": \"24\",\n        \"type\": \"credit_card\"\n    },\n    \"payment_method_id\": \"master\",\n    \"payment_type_id\": \"credit_card\",\n    \"platform_id\": null,\n    \"pos_id\": \"77323489\",\n    \"processing_mode\": \"aggregator\",\n    \"refunds\": [],\n    \"shipping_amount\": 0,\n    \"sponsor_id\": null,\n    \"statement_descriptor\": \"MERCPAGO*MARCOPOLO\",\n    \"status\": \"approved\",\n    \"status_detail\": \"accredited\",\n    \"store_id\": \"54315556\",\n    \"tags\": null,\n    \"taxes_amount\": 0,\n    \"transaction_amount\": 1,\n    \"transaction_amount_refunded\": 0,\n    \"transaction_details\": {\n        \"acquirer_reference\": null,\n        \"external_resource_url\": null,\n        \"financial_institution\": null,\n        \"installment_amount\": 1,\n        \"net_received_amount\": 0.95,\n        \"overpaid_amount\": 0,\n        \"payable_deferral_period\": null,\n        \"payment_method_reference_id\": null,\n        \"total_paid_amount\": 1\n    }\n}"
+								}
+							]
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
@@ -618,32 +1689,62 @@
 		},
 		{
 			"key": "access_token",
-			"value": ""
+			"value": "APP_USR-4688644979731832-041412-45df35b451a1cae386b4dc974b664551-323709768"
 		},
 		{
 			"key": "id_terminal",
-			"value": ""
+			"value": "GERTEC_MP35P__8701442341443345"
 		},
 		{
 			"key": "refresh_token",
-			"value": "",
+			"value": "TG-644f0d66d88dfb000101d9fa-323709768",
 			"type": "string"
 		},
 		{
 			"key": "guid_pagto",
-			"value": ""
+			"value": "b15e78a3-78de-4dfe-988b-7412d7151fbc"
 		},
 		{
 			"key": "id_pagto",
-			"value": ""
+			"value": "57031040004"
 		},
 		{
 			"key": "idPgtoAEstornar",
-			"value": ""
+			"value": "57889933796"
 		},
 		{
 			"key": "idEstorno",
-			"value": ""
+			"value": "1362755842"
+		},
+		{
+			"key": "seller_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "store_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "caixa_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "external_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "external_reference",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "payment_id",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
