@@ -81,7 +81,7 @@
 								{
 									"key": "client_id",
 									"value": "",
-									"description": "id app",
+									"description": "id ",
 									"type": "text"
 								},
 								{
@@ -372,7 +372,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"value": "",
 									"type": "string"
 								}
 							]
@@ -530,7 +530,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "APP_USR-4688644979731832-050823-26c2bc35375b79b65a86902ad1f5d2f7-323709768",
+									"value": "",
 									"type": "string"
 								}
 							]
