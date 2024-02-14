@@ -25,6 +25,10 @@ Documentação e referência da API de pagamentos do Marcado: <https://www.merca
 ## Exemplo em C#
 - RestSharp
 
+## Pacotes para PHP
+- composer require [socialiteproviders/mercadopago](https://github.com/SocialiteProviders/MercadoPago)
+- composer require [mercadopago/dx-php](https://github.com/mercadopago/sdk-php)
+
 ## Documentação Oficial da API de pagamentos Mercado Pago
 - Introdução <https://www.mercadopago.com.br/developers/pt/reference>
 - Dispositivos <https://www.mercadopago.com.br/developers/pt/reference/integrations_api/_point_integration-api_devices/get>
